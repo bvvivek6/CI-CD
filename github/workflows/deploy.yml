@@ -1,0 +1,32 @@
+name: deploy to EC2
+
+#on which command should this action be triggered
+on:
+  push: # can be any command. during pull request, merge etc
+    branches: #on which branch
+      - main
+
+    #what all things the action should do after the trigger
+jobs:
+  deploy: #on deloy or on testing etc ...
+    runs-on: ubuntu-latest
+    steps:
+      #carry out the steps like check any changes, ssh to the remomte server and execute the git commands
+      - name: checkout code from the github
+        uses: actions/checkout@v4
+
+      - name: ssh into the ec2 server
+        uses: appleboy/ssh-action@v1
+
+        #connect to the ssh
+        with:
+          host: { { secrets.EC2_IP } }
+          username: ubuntu
+          key: { { secrets.EC2_SSH_KEY } }
+
+          #the script which i want to run so that the code in the server is upto date and inline with the github code
+          script: |
+            cd ci-cd
+            git pull origin main
+            npm install
+            pm2 restart cicd
