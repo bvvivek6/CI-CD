@@ -20,9 +20,9 @@ jobs:
 
         #connect to the ssh
         with:
-          host: { { secrets.EC2_IP } }
+          host: ${{ secrets.EC2_IP }}
           username: ubuntu
-          key: { { secrets.EC2_SSH_KEY } }
+          key: ${{ secrets.EC2_SSH_KEY }}
 
           #the script which i want to run so that the code in the server is upto date and inline with the github code
           script: |
